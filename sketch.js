@@ -7,11 +7,12 @@ var engine, world;
 var box1, pig1,pig3;
 var backgroundImg,platform;
 var bird, slingshot;
-
+var bg, score
+score = 0;
 var gameState = "onSling";
 
 function preload() {
-    backgroundImg = loadImage("sprites/bg.png");
+    getTime()
 }
 
 function setup(){
@@ -45,6 +46,7 @@ function setup(){
 }
 
 function draw(){
+    if(backgroundImg)
     background(backgroundImg);
     Engine.update(engine);
     //strokeWeight(4);
@@ -53,12 +55,12 @@ function draw(){
     ground.display();
     pig1.display();
     log1.display();
-
+    pig1.Score();
     box3.display();
     box4.display();
     pig3.display();
     log3.display();
-
+    pig3.Score();
     box5.display();
     log4.display();
     log5.display();
@@ -66,8 +68,13 @@ function draw(){
     bird.display();
     platform.display();
     //log6.display();
-    slingshot.display();    
+    slingshot.display();  
+    textSize(20)
+    fill(255)
+    text("Score: " + score, 700,50)  
 }
+
+
 
 function mouseDragged(){
     if (gameState!=="launched"){
@@ -85,4 +92,22 @@ function keyPressed(){
     if(keyCode === 32){
        // slingshot.attach(bird.body);
     }
+}
+
+async function getTime(){
+    var response = await fetch("http://worldtimeapi.org/api/timezone/America/Chicago");
+    console.log(response);
+    var responseJson = await response.json();
+    console.log(responseJson);
+    var dateTime = responseJson.datetime
+    var hour = dateTime.slice(11,13);
+    console.log(hour);
+
+    if(hour < 19 && hour > 7){
+        bg = "sprites/bg.png" 
+    }
+    else{
+        bg = "sprites/bg2.jpg"
+    }
+    backgroundImg = loadImage(bg);
 }
